@@ -2,8 +2,8 @@
 
 function errexit(msg) {
         print msg > "/dev/stderr"
-        exit 2         
-}                      
+        exit 2
+}
 
 BEGIN {
 	if (ARGV[2] == "") errexit("USAGE: megrep[.awk] <regex> [regex2] ... [regexN] <file>")
@@ -27,7 +27,7 @@ BEGIN {
 			}
 		}
 	}
-	
+
 	# Not all/any the regexes matched.
 	exit 1
 }
