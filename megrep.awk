@@ -1,8 +1,13 @@
 #!/usr/bin/gawk --exec
 
+function errexit(msg) {
+        print msg > "/dev/stderr"
+        exit 2
+}
+
 BEGIN {
 
-	if (ARGC < 3) exit 2
+	if (ARGC < 3) errexit "Not enough arguments."
 
 	file=ARGV[ARGC-1]
 
