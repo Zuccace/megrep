@@ -1,6 +1,9 @@
 #!/usr/bin/gawk --exec
 
 BEGIN {
+
+	if (ARGC < 3) exit 2
+
 	file=ARGV[ARGC-1]
 
 	for (i = 1; i < ARGC-1; i++) {
