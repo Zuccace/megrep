@@ -32,7 +32,7 @@ BEGIN {
 			# We'll check for
 			if (length(ARGV[i+1]) == 0) errexit("Not enough arguments.")
 		}
-		else if ((arg == "--stdin" || arg == "-i") && !stdin) {
+		else if (arg == "--stdin" && !stdin) {
 			files[j++]="/dev/stdin"
 			stdin=1
 			# Note that user can specify stdin _with_ regular files.
@@ -41,9 +41,9 @@ BEGIN {
 			print "USAGE:"
 			print "       megrep <regex1> [regexN] <file>"
 			print "       -OR-"
-			print "       megrep <<--file|-f> <file1>|<-i|--stdin>> [<--file|-f> <fileN>] [--] <regex1> [regexN]"
+			print "       megrep <<--file|-f> <file1>|<--stdin>> [<--file|-f> <fileN>] [--] <regex1> [regexN]"
 			print "-- forces megrep to ignore further switches."
-			print "-i or --stdin or /dev/stdin as a file, can be used to read from standard input."
+			print "--stdin or /dev/stdin as a file, can be used to read from standard input."
 			print "If standard input is specified more then once, the ones after first are silently ignored."
 			exit 0
 		}
