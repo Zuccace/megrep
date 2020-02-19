@@ -32,10 +32,11 @@ BEGIN {
 			# We'll check for
 			if (length(ARGV[i+1]) == 0) errexit("Not enough arguments.")
 		}
-		else if (arg == "--stdin" && !stdin) {
-			files[j++]="/dev/stdin"
-			stdin=1
-			# Note that user can specify stdin _with_ regular files.
+		else if (arg == "--stdin") {
+			if (!stdin) {
+				files[j++]="/dev/stdin"
+				stdin=1
+			}
 		}
 		else if (arg ~ /--help|-h|-\?/) {
 			print "USAGE:"
@@ -60,18 +61,19 @@ BEGIN {
 		for (i = i; i < ARGC; i++) regex[r++] = ARGV[i] # Same but user has specified file(s) by use of --file/-f.
 	}
 
-	for (i in regex) for (k in files) { # Go trough all the regexes and files
+	for (k in files) { # Go trough all the files
+		for (i in regex) re[i] = regex[i] # Copy array
+
 		while ((getline < files[k]) > 0) { # ... line-by-line
-			if ($0 ~ regex[i]) {
-				# Optionally print the matching line like grep.
-				#print $0
-				close(files[k])
+			for (i in re) if ($0 ~ re[i]) delete re[i]
+			if (length(re) == 0) {
 				found=1
 				break
 			}
 		}
+		close(files[k])
 
-		if (found < 1) exit 1
+		if (found != 1) exit 1
 		found=0
 	}
 	exit 0
