@@ -19,20 +19,35 @@ BEGIN {
 		else if (arg == "--") {
 			i++
 			break
-		} else if (arg == "--file" || arg == "-f") {
+		}
+		else if (arg == "--file" || arg == "-f") {
 			i++
 			file=ARGV[i]
-			if (checkfile(file)) files[j++]=file
+			if (file == "/dev/stdin" && !stdin) {
+				stdin=1
+				files[j++]=file
+			}
+			else if (checkfile(file)) files[j++]=file
 			else errexit("Unable to read '" file "'.")
+			# We'll check for
 			if (length(ARGV[i+1]) == 0) errexit("Not enough arguments.")
-		} else if (arg ~ /--help|-h|-\?/) {
+		}
+		else if ((arg == "--stdin" || arg == "-i") && !stdin) {
+			files[j++]="/dev/stdin"
+			stdin=1
+			# Note that user can specify stdin _with_ regular files.
+		}
+		else if (arg ~ /--help|-h|-\?/) {
 			print "USAGE:"
 			print "       megrep <regex1> [regexN] <file>"
 			print "       -OR-"
-			print "       megrep <--file|-f> <file1> [<--file|-f> <fileN>] [--] <regex1> [regexN]"
+			print "       megrep <<--file|-f> <file1>|<-i|--stdin>> [<--file|-f> <fileN>] [--] <regex1> [regexN]"
 			print "-- forces megrep to ignore further switches."
+			print "-i or --stdin or /dev/stdin as a file, can be used to read from standard input."
+			print "If standard input is specified more then once, the ones after first are silently ignored."
 			exit 0
-		} else errexit("Unknown switch: " arg)
+		}
+		else errexit("Unknown switch: " arg)
 	}
 
 	if (length(files[0]) == 0) {
