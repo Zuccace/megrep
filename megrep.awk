@@ -29,7 +29,9 @@ BEGIN {
 			}
 			else if (checkfile(file)) files[j++]=file
 			else errexit("Unable to read '" file "'.")
-			# We'll check for
+			
+			# We'll check if we have enough arguments at this point already...
+			# Might want to get rid of this.
 			if (length(ARGV[i+1]) == 0) errexit("Not enough arguments.")
 		}
 		else if (arg == "--stdin") {
@@ -57,9 +59,8 @@ BEGIN {
 		if (!checkfile(file)) errexit("Unable to read '" file "'.")
 		files[0] = file
 		for (i = 1; i < ARGC-1; i++) regex[r++] = ARGV[i] # Create regex array from the arguments, minus the last one which is the file.
-	} else {
-		for (i = i; i < ARGC; i++) regex[r++] = ARGV[i] # Same but user has specified file(s) by use of --file/-f.
 	}
+	else for (i = i; i < ARGC; i++) regex[r++] = ARGV[i] # Same but user has specified file(s) by use of --file/-f.
 
 	for (k in files) { # Go trough all the files
 		for (i in regex) re[i] = regex[i] # Copy array
